@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matriz de Certificações Red Hat OpenShift - Trilha RHCA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            redhat: {
+              DEFAULT: '#EE0000',
+              dark: '#BA0000',
+              light: '#FF4D4D',
+              surface: '#FFF5F5',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom scrollbars and transitions */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .badge-glow {
+      box-shadow: 0 0 12px rgba(238, 0, 0, 0.25);
+    }
+    .modal-backdrop {
+      background-color: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col font-sans">
+
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-redhat flex items-center justify-center text-white font-black text-xl shadow-md badge-glow">
+          RH
+        </div>
+        <div>
+          <h1 class="text-lg font-bold text-slate-900 leading-tight flex items-center gap-2">
+            Matriz Interativa OpenShift
+            <span class="text-xs bg-redhat/10 text-redhat font-semibold px-2 py-0.5 rounded-full border border-redhat/20">Trilha RHCA</span>
+          </h1>
+          <p class="text-xs text-slate-500">Planejamento e acompanhamento detalhado de estudos por tópicos de exame</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="btn-architect-status" onclick="openArchitectModal()" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 text-white hover:bg-slate-800 text-xs font-medium transition shadow-sm">
+          <svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+          </svg>
+          <span id="header-rhca-status">Simulador RHCA (0/5)</span>
+        </button>
+        <button onclick="resetAllProgress()" title="Limpar progresso salvo" class="px-2.5 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-500 hover:text-slate-700 text-xs transition">
+          Resetar
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
+
+    <!-- Hero Card with Architect Requirements Tracker -->
+    <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white rounded-2xl p-5 sm:p-6 shadow-xl relative overflow-hidden border border-slate-800">
+      <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-redhat/20 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div class="max-w-2xl">
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-redhat/20 text-red-300 border border-red-500/30 text-xs font-semibold mb-2">
+            Metodologia RHCA (Red Hat Certified Architect in OpenShift)
+          </div>
+          <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-white">Requisitos Oficiais para Grau de Arquiteto</h2>
+          <p class="text-sm text-slate-300 mt-1.5 leading-relaxed">
+            Para conquistar o certificado de <strong class="text-white">Red Hat Certified Architect in OpenShift</strong>, você deve ser aprovado em <strong class="text-amber-400">5 exames</strong>: obrigatoriamente os <strong class="text-emerald-400">EX280</strong> e <strong class="text-emerald-400">EX380</strong>, acrescidos de no mínimo <strong class="text-amber-400">3 exames Especialistas (Nível 4)</strong>.
+          </p>
+        </div>
+
+        <!-- Progress Pills -->
+        <div class="bg-slate-800/80 backdrop-blur rounded-xl p-4 border border-slate-700 min-w-[280px]">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-300">Progresso do Arquiteto</span>
+            <span id="rhca-badge-pct" class="text-xs font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300">0%</span>
+          </div>
+          <div class="w-full bg-slate-700 rounded-full h-2.5 mb-3 overflow-hidden">
+            <div id="rhca-progress-bar" class="bg-gradient-to-r from-red-500 to-amber-400 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div class="bg-slate-900/60 p-2 rounded-lg border border-slate-700/60">
+              <span class="text-slate-400 block text-[11px]">Obrigatórios (2)</span>
+              <span id="stat-mandatory" class="font-bold text-slate-200">0 / 2 Aprovados</span>
+            </div>
+            <div class="bg-slate-900/60 p-2 rounded-lg border border-slate-700/60">
+              <span class="text-slate-400 block text-[11px]">Especialistas (3)</span>
+              <span id="stat-specialists" class="font-bold text-slate-200">0 / 3 Selecionados</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm space-y-3">
+      <div class="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+        
+        <!-- Search bar -->
+        <div class="relative flex-1">
+          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+          </div>
+          <input type="text" id="search-input" oninput="applyFilters()" placeholder="Buscar por exame (ex: EX380), tópico (ex: GitOps, BGP, OADP, Storage, VM), curso (ex: DO280)..." 
+            class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-redhat/20 focus:border-redhat transition">
+        </div>
+
+        <!-- Filter dropdowns -->
+        <div class="flex flex-wrap items-center gap-2">
+          <select id="filter-level" onchange="applyFilters()" class="text-xs bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-700 focus:outline-none focus:ring-1 focus:ring-redhat">
+            <option value="all">Todos os Níveis</option>
+            <option value="level-2">Nível 2 - Administrator</option>
+            <option value="level-3">Nível 3 - Engineer</option>
+            <option value="level-4">Nível 4 - Specialist</option>
+          </select>
+
+          <select id="filter-status" onchange="applyFilters()" class="text-xs bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-700 focus:outline-none focus:ring-1 focus:ring-redhat">
+            <option value="all">Todos os Status</option>
+            <option value="active">Exames Ativos</option>
+            <option value="retired">Aposentados (Retired)</option>
+          </select>
+
+          <select id="filter-rhca-role" onchange="applyFilters()" class="text-xs bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-slate-700 focus:outline-none focus:ring-1 focus:ring-redhat">
+            <option value="all">Papel no RHCA</option>
+            <option value="mandatory">Obrigatórios RHCA (EX280, EX380)</option>
+            <option value="elective">Eletivas Especialistas (Pick 3)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Quick Category Tags -->
+      <div class="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-100 text-xs text-slate-500">
+        <span class="font-medium text-slate-400">Atalhos de tema:</span>
+        <button onclick="setSearchFilter('Virtualization')" class="px-2.5 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-600 transition">Virtualização (EX316 / EX336)</button>
+        <button onclick="setSearchFilter('Networking')" class="px-2.5 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-600 transition">Networking / BGP (EX282)</button>
+        <button onclick="setSearchFilter('Storage')" class="px-2.5 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-600 transition">ODF & Ceph (EX370)</button>
+        <button onclick="setSearchFilter('Security')" class="px-2.5 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-600 transition">Segurança / ACS (EX430)</button>
+        <button onclick="setSearchFilter('Advanced Cluster Management')" class="px-2.5 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-600 transition">Multicluster / ACM (EX432)</button>
+        <button onclick="setSearchFilter('')" class="px-2 py-1 text-slate-400 hover:text-slate-600 underline">Limpar busca</button>
+      </div>
+    </div>
+
+    <div id="exams-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5">
+      <!-- Exam cards rendered via JavaScript -->
+    </div>
+
+    <!-- Empty state feedback -->
+    <div id="no-results" class="hidden bg-white p-12 text-center rounded-2xl border border-slate-200">
+      <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto text-slate-400 mb-3">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <h3 class="text-base font-semibold text-slate-800">Nenhum exame corresponde aos filtros aplicados</h3>
+      <p class="text-sm text-slate-500 mt-1">Tente remover os filtros ou pesquisar com outro termo.</p>
+      <button onclick="resetFilters()" class="mt-4 px-4 py-2 bg-redhat text-white text-xs font-medium rounded-lg hover:bg-redhat-dark transition">
+        Resetar Filtros
+      </button>
+    </div>
+  </main>
+
+  <div id="detail-modal" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden border border-slate-200">
+      <!-- Modal Header -->
+      <div class="p-5 border-b border-slate-100 flex items-start justify-between bg-slate-50/70">
+        <div>
+          <div class="flex items-center gap-2 mb-1" id="modal-badges"></div>
+          <h3 id="modal-title" class="text-lg font-bold text-slate-900"></h3>
+          <p id="modal-subtitle" class="text-xs text-slate-500"></p>
+        </div>
+        <button onclick="closeDetailModal()" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-200/60 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Modal Body (Checklist & Objectives) -->
+      <div class="p-5 overflow-y-auto space-y-4 flex-1">
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-900 flex items-start gap-2.5">
+          <svg class="w-4 h-4 text-amber-600 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+          </svg>
+          <div>
+            <strong>Checklist de Domínio de Estudos:</strong> Marque os tópicos abaixo conforme você pratica nos laboratórios. Seu progresso fica salvo automaticamente no navegador!
+          </div>
+        </div>
+
+        <div id="modal-tasks-container" class="space-y-4"></div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between text-xs">
+        <span id="modal-progress-summary" class="text-slate-500 font-medium">Progresso: 0%</span>
+        <div class="flex items-center gap-2">
+          <button onclick="copyObjectivesText()" class="px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-white text-slate-700 font-medium transition flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
+            </svg>
+            <span id="btn-copy-label">Copiar Ementa</span>
+          </button>
+          <button onclick="closeDetailModal()" class="px-4 py-1.5 bg-slate-800 text-white rounded-lg hover:bg-slate-900 font-medium transition">
+            Fechar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="architect-modal" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-2xl w-full flex flex-col shadow-2xl overflow-hidden border border-slate-200">
+      <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-900 text-white">
+        <div>
+          <h3 class="text-base font-bold flex items-center gap-2">
+            Simulador da Trilha RHCA em OpenShift
+          </h3>
+          <p class="text-xs text-slate-300">Escolha os exames que você já passou ou planeja realizar para validar o título</p>
+        </div>
+        <button onclick="closeArchitectModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4 max-h-[75vh] overflow-y-auto text-sm">
+        <!-- Mandatory section -->
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">1. Exames Obrigatórios (Ambos necessários)</h4>
+          <div class="space-y-2" id="sim-mandatory-list"></div>
+        </div>
+
+        <!-- Elective section -->
+        <div class="pt-3 border-t border-slate-100">
+          <div class="flex items-center justify-between mb-2">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500">2. Exames Especialistas (Escolha no mínimo 3)</h4>
+            <span id="sim-specialist-count" class="text-xs font-semibold text-amber-600">0 selecionados</span>
+          </div>
+          <div class="space-y-2" id="sim-elective-list"></div>
+        </div>
+
+        <!-- Result Verdict Box -->
+        <div id="sim-result-box" class="p-4 rounded-xl border transition-all duration-300">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <div class="p-4 border-t border-slate-100 bg-slate-50 flex justify-end">
+        <button onclick="closeArchitectModal()" class="px-4 py-2 bg-slate-900 text-white text-xs font-medium rounded-lg hover:bg-slate-800">
+          Confirmar e Fechar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white text-xs font-medium px-4 py-2.5 rounded-xl shadow-lg border border-slate-700 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-2">
+    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+    <span id="toast-message">Notificação</span>
+  </div>
+
+  <script>
+    // Complete structured data from the official Red Hat documentation
+    const EXAMS_DATA = [
+      {
+        id: "EX280",
+        code: "EX280",
+        title: "Red Hat Certified System Administrator in OpenShift exam",
+        level: "Nível 2 - Administrator",
+        levelCategory: "level-2",
+        rhcaRole: "mandatory",
+        courses: ["RH124", "DO180", "DO280"],
+        version: "OCP 4.22 / 4.18",
+        duration: "3.0 horas",
+        status: "active",
+        summary: "Fundação essencial para administração de clusters de produção, segurança, multitenancy e configuração de usuários.",
+        sections: [
+          {
+            name: "Manage OpenShift Container Platform",
+            tasks: [
+              "Use the web console to manage and configure an OpenShift cluster",
+              "Use the command-line interface to manage and configure an OpenShift cluster",
+              "Create and delete projects",
+              "Locate and examine container images",
+              "Identify images using tags and digests",
+              "Query, format, and filter attributes of Kubernetes resources",
+              "Import, export, and configure Kubernetes resources",
+              "Examine resources and cluster status",
+              "Monitor cluster events and alerts",
+              "View logs",
+              "Assess the health of an OpenShift cluster",
+              "Troubleshoot common container, pod, and cluster events and alerts",
+              "Use product documentation",
+              "Be prepared to perform all tasks of a Red Hat Certified Technologist in OpenShift"
+            ]
+          },
+          {
+            name: "Declarative Resource Management",
+            tasks: [
+              "Work with resource manifests",
+              "Deploy applications from YAML resource manifests",
+              "Update application deployments",
+              "Deploy applications using Kustomize",
+              "Work with Kustomize overlays",
+              "Create and use secrets",
+              "Create and use configuration maps"
+            ]
+          },
+          {
+            name: "Deploy Applications",
+            tasks: [
+              "Deploy applications from templates and Helm charts",
+              "Manage application deployments",
+              "Work with replica sets",
+              "Work with labels and selectors",
+              "Configure services",
+              "Expose applications to external access"
+            ]
+          },
+          {
+            name: "Manage Authentication and Authorization",
+            tasks: [
+              "Configure the HTPasswd identity provider for authentication",
+              "Create and delete users",
+              "Modify user passwords",
+              "Create and manage groups",
+              "Modify user and group permissions"
+            ]
+          },
+          {
+            name: "Configure Network Security & External Access",
+            tasks: [
+              "Configure networking components",
+              "Troubleshoot software defined networking",
+              "Create and edit external routes",
+              "Control cluster network ingress",
+              "Secure external and internal traffic using TLS certificates",
+              "Configure application network policies",
+              "Expose non-HTTP/SNI Applications",
+              "Configure a load balancer service",
+              "Configure external application access"
+            ]
+          },
+          {
+            name: "Enable Developer Self-Service",
+            tasks: [
+              "Configure cluster resource quotas",
+              "Configure project quotas",
+              "Configure project resource requirements",
+              "Configure project limit ranges",
+              "Configure project templates"
+            ]
+          },
+          {
+            name: "Manage OpenShift Operators & Application Security",
+            tasks: [
+              "Install an operator, uninstall an operator and delete an operator",
+              "Configure and manage service accounts",
+              "Run privileged applications",
+              "Manage and apply permissions using security context constraints (SCC)",
+              "Create and apply secrets to manage sensitive information",
+              "Configure application access to Kubernetes APIs",
+              "Deploy jobs to perform one-time tasks and configure Kubernetes cron jobs"
+            ]
+          }
+        ]
+      },
+      {
+        id: "EX380",
+        code: "EX380",
+        title: "Red Hat Certified Advanced System Administrator in OpenShift exam",
+        level: "Nível 3 - Engineer / Requisito RHCA",
+        levelCategory: "level-3",
+        rhcaRole: "mandatory",
+        courses: ["DO280", "DO380"],
+        version: "OCP 4.18",
+        duration: "Hands-on avançado",
+        status: "active",
+        summary: "Escalabilidade corporativa, integração com SSO/LDAP, automação com OpenShift GitOps, particionamento de nós e backups com OADP.",
+        sections: [
+          {
+            name: "Configure and Manage OpenShift Authentication and Identities",
+            tasks: [
+              "Integrate OpenShift with LDAP",
+              "Integrate OpenShift with the Red Hat SSO OIDC (Keycloak)",
+              "Manage multiple identity providers",
+              "Configure authentication and synchronize OpenShift groups",
+              "Resolve synchronization conflicts and maintain group synchronization on a scheduled basis",
+              "Configure RBAC roles with users and groups",
+              "Create and use authentication tokens with kubeconfig files",
+              "Create and use authentication certificates with kubeconfig files"
+            ]
+          },
+          {
+            name: "Back up and Restore Applications with OADP",
+            tasks: [
+              "Export and import a Kubernetes application and container images",
+              "Deploy the OADP operator",
+              "Configure a full application backup including data and resources",
+              "Configure and use volume snapshots",
+              "Schedule a recurring backup",
+              "Restore applications"
+            ]
+          },
+          {
+            name: "Manage Workloads with Cluster Partitioning & Scheduling",
+            tasks: [
+              "Dedicate multiple cluster nodes to a specific workload",
+              "Configure and work with node pools and machine configurations",
+              "Use the machine configuration operator (MCO) and special purpose operators",
+              "Configure workloads to run on dedicated cluster nodes (taints and tolerations)",
+              "Configure and work with node labels and selectors",
+              "Configure and work with project tolerations",
+              "Configure application resiliency using pod disruption budgets (PDB)",
+              "Configure and use affinity and anti-affinity rules"
+            ]
+          },
+          {
+            name: "Implement OpenShift GitOps",
+            tasks: [
+              "Deploy OpenShift GitOps operator",
+              "Configure users, instances, and integrations",
+              "Configure Argo CD",
+              "Create pipelines and repositories (Git, Helm, Kustomize)",
+              "Configure GitOps for cluster administration",
+              "Configure GitOps for application management"
+            ]
+          },
+          {
+            name: "Manage Cluster Monitoring, Metrics and Logging",
+            tasks: [
+              "Troubleshoot performance and availability issues with applications and clusters",
+              "Configure and silence alerts and notification",
+              "Configure OpenShift logging to forward logs to an external aggregator",
+              "Configure OpenShift logging for short-term log retention and aggregation",
+              "Deploy OpenShift logging with Vector and Loki",
+              "Deploy the Event Router to log Kubernetes events",
+              "Query logs from cluster services and node services and diagnose logging problems"
+            ]
+          }
+        ]
+      },
+      {
+        id: "EX282",
+        code: "EX282",
+        title: "Red Hat Certified Specialist in OpenShift Networking exam",
+        level: "Nível 4 - Specialist",
+        levelCategory: "level-4",
+        rhcaRole: "elective",
+        courses: ["DO282"],
+        version: "OCP 4.20",
+        duration: "4.0 horas",
+        status: "active",
+        summary: "Redes avançadas: Multus CNI, redes definidas pelo usuário (UDN), MetalLB, BGP nativo, políticas de saída (EgressIP) e observabilidade com eBPF.",
+        sections: [
+          {
+            name: "Manage Core Networking in OCP",
+            tasks: [
+              "Inspect and interpret the Cluster Network Operator (CNO) configuration",
+              "Identify active network plugin and settings (CIDRs, MTU, host prefix)",
+              "Configure additional network interfaces using Multus CNI and NetworkAttachmentDefinition",
+              "Create secondary networks using macvlan, ipvlan, and bridge CNI plugins",
+              "Configure IP address management (static, host-local, DHCP) for secondary networks"
+            ]
+          },
+          {
+            name: "Implement and Manage User-Defined Networks (UDN)",
+            tasks: [
+              "Create UserDefinedNetwork resources for namespace-scoped network isolation",
+              "Create ClusterUserDefinedNetwork resources that span multiple namespaces",
+              "Deploy workloads on UDN and verify isolation from default cluster network",
+              "Apply NetworkPolicy resources to user-defined networks",
+              "Troubleshoot connectivity and isolation issues on user-defined networks"
+            ]
+          },
+          {
+            name: "Manage DNS, Ingress and Egress Traffic",
+            tasks: [
+              "Configure DNS forwarding for custom domains and verify CoreDNS pod health",
+              "Expose applications using MetalLB LoadBalancer services with IP address pools",
+              "Create secure routes with TLS termination (edge, re-encrypt, passthrough)",
+              "Configure ingress controller sharding using route selectors and labels",
+              "Create EgressFirewall resources with CIDR ranges and DNS names",
+              "Assign static source IP addresses to namespaces using EgressIP and configure failover"
+            ]
+          },
+          {
+            name: "Implement Native BGP Routing & Node Networking",
+            tasks: [
+              "Create FRRConfiguration resources to define BGP peering sessions",
+              "Configure BGP neighbors, ASN, and router IDs",
+              "Verify BGP session establishment and advertise service/pod prefixes",
+              "Create NodeNetworkConfigurationPolicy (NMState) for bonds, VLANs, and bridges",
+              "Connect virtual machines to external provider networks via NMState bridges"
+            ]
+          },
+          {
+            name: "Enable Network Observability",
+            tasks: [
+              "Manage network observability configuration",
+              "Configure FlowCollector resources for eBPF-based network flow collection",
+              "Tune FlowCollector parameters (sampling, cache size, resource limits)",
+              "Capture and filter network flows by namespace, pod, service, or IP address",
+              "Analyze traffic patterns using the console plugin and create custom Prometheus metrics"
+            ]
+          }
+        ]
+      },
+      {
+        id: "EX316",
+        code: "EX316",
+        title: "Red Hat Certified Specialist in OpenShift Virtualization exam",
+        level: "Nível 4 - Specialist",
+        levelCategory: "level-4",
+        rhcaRole: "elective",
+        courses: ["RH200", "DO156", "DO256"],
+        version: "OCP 4.18",
+        duration: "4.0 horas",
+        status: "active",
+        summary: "Convergir VMs e Containers: implantação do KubeVirt, templates com cloud-init, migração ao vivo, snapshots e resiliência de VMs.",
+        sections: [
+          {
+            name: "Deploy & Manage Virtual Machines",
+            tasks: [
+              "Deploy OpenShift Virtualization operator using Operator Lifecycle Management (OLM)",
+              "Provision and manage virtual machines from web interface and CLI",
+              "Allow different users to access different virtual machine resources (RBAC)"
+            ]
+          },
+          {
+            name: "Configure Networking and Storage for VMs",
+            tasks: [
+              "Work with Kubernetes SDN, network policies, and ClusterIP/NodePort services",
+              "Configure multihomed VMs using NMState and Multus CNI",
+              "Connect virtual machines to user-defined networks",
+              "Configure persistent storage, attach and detach disks to VMs",
+              "Connect virtual machines to external storage using Multus"
+            ]
+          },
+          {
+            name: "Data Protection, Templates, Snapshots & Migration",
+            tasks: [
+              "Deploy OADP operator and back up / restore virtual machines",
+              "Generate custom VM templates and use cloud-init for automated credential and script injection",
+              "Create, manage, and restore VM snapshots and clone VM disks via DataVolumes",
+              "Migrate VMs from compatible hypervisors (Import OVA images)",
+              "Configure node affinity and execute VM Live Migrations without downtime"
+            ]
+          },
+          {
+            name: "Node Maintenance, Probes & Failure Recovery",
+            tasks: [
+              "Configure node maintenance resources and drain nodes correctly using CLI",
+              "Configure health probes and watchdog devices for virtual machines",
+              "Determine eviction strategies, node selectors, anti-affinity, and taints for surviving node loss"
+            ]
+          }
+        ]
+      },
+      {
+        id: "EX336",
+        code: "EX336",
+        title: "Red Hat Certified Specialist in Automating OpenShift VM Management exam",
+        level: "Nível 4 - Specialist",
+        levelCategory: "level-4",
+        rhcaRole: "elective",
+        courses: ["DO316", "DO336"],
+        version: "OCP & AAP",
+        duration: "4.0 horas",
+        status: "active",
+        summary: "Automação total de máquinas virtuais no OpenShift combinando Ansible Automation Platform (AAP) e Migration Toolkit for Virtualization (MTV).",
+        sections: [
+          {
+            name: "Deploy and Configure Ansible Automation Platform (AAP) Operator",
+            tasks: [
+              "Deploy AAP Operator in an OpenShift cluster",
+              "Deploy Automation Controller and Private Automation Hub instances",
+              "Configure automation controller post-installation settings"
+            ]
+          },
+          {
+            name: "Configure AAP Assets & Credentials",
+            tasks: [
+              "Upload collections and Execution Environments (EE) to Private Automation Hub",
+              "Import Execution Environments into Automation Controller",
+              "Create dynamic inventories of OpenShift Virtualization VMs",
+              "Configure inventory variables and credentials to access OCP cluster, Git, and Hub"
+            ]
+          },
+          {
+            name: "Manage Automation Projects, Workflows & Surveys",
+            tasks: [
+              "Create projects, job templates, and launch jobs",
+              "Create job template surveys and bind variables to Jinja2 templates",
+              "Create orchestration workflows"
+            ]
+          },
+          {
+            name: "Automate VM Migrations and Lifecycle via Playbooks",
+            tasks: [
+              "Deploy Migration Toolkit for Virtualization (MTV) operator in OpenShift",
+              "Import VMs from VMware or RHV into OpenShift Virtualization using MTV and AAP",
+              "Create and manage OpenShift VMs using Ansible playbooks",
+              "Manage VM storage, networking, software installation, and services using playbooks"
+            ]
+          }
+        ]
+      },
+      {
+        id: "EX370",
+        code: "EX370",
+        title: "Red Hat Certified Specialist in OpenShift Data Foundation exam",
+        level: "Nível 4 - Specialist",
+        levelCategory: "level-4",
+        rhcaRole: "elective",
+        courses: ["DO370"],
+        version: "ODF 4.16 / OCP 4.16",
+        duration: "3.0 horas",
+        status: "active",
+        summary: "Armazenamento corporativo de dados (Ceph) para Kubernetes: blocos (RBD), arquivos (CephFS) e objetos (NooBaa/S3).",
+        sections: [
+          {
+            name: "Deploy ODF in Internal Mode & Core OpenShift Services",
+            tasks: [
+              "Deploy OpenShift Data Foundation from web console and CLI",
+              "Configure internal image registry to use OpenShift Data Foundation",
+              "Configure cluster monitoring and logging (LokiStack) with ODF backing storage"
+            ]
+          },
+          {
+            name: "Workloads with File and Block Storage",
+            tasks: [
+              "Identify Ceph components (MON, OSD, MGR, MDS) required for ODF",
+              "Configure applications to use ODF File Storage (CephFS) and Block Storage (RBD)",
+              "Configure ODF NFS storage and custom StorageClasses",
+              "Perform volume snapshots and clones for block and file volumes"
+            ]
+          },
+          {
+            name: "Object Storage & Capacity Management",
+            tasks: [
+              "Create Object Bucket Claims (OBC) and access object storage",
+              "Configure and use the s3cmd utility to interact with buckets",
+              "Configure applications to use S3 object storage",
+              "Monitor ODF cluster health and manage storage quotas and permissions",
+              "Extend application storage and add new disks to ODF cluster"
+            ]
+          }
+        ]
+      },
+      {
+        id: "EX430",
+        code: "EX430",
+        title: "Red Hat Certified Specialist in OpenShift Advanced Cluster Security exam",
+        level: "Nível 4 - Specialist",
+        levelCategory: "level-4",
+        rhcaRole: "elective",
+        courses: ["DO280", "DO380", "DO430"],
+        version: "RHACS 4.6",
+        duration: "4.0 horas",
+        status: "active",
+        summary: "Segurança de ponta a ponta (StackRox): análise de vulnerabilidades em pipelines, admissão de pods, políticas de runtime e conformidade CIS.",
+        sections: [
+          {
+            name: "Deploy & Architecture of RHACS",
+            tasks: [
+              "Investigate the architecture of RHACS and its components (Central, Sensor, Collector, Scanner)",
+              "Deploy the RHACS operator and configure RHACS Central",
+              "Import and configure secured clusters to be monitored and audited by RHACS"
+            ]
+          },
+          {
+            name: "Vulnerability Management & Risk Assessment",
+            tasks: [
+              "Manage vulnerability data sources and automated scanning",
+              "Detect Common Vulnerabilities and Exposures (CVEs) and categorize risks",
+              "Manage vulnerability deferral process and generate detailed audit reports",
+              "Assess risk in deployments based on images, privileges, and exposures"
+            ]
+          },
+          {
+            name: "Security Policies & Network Segmentation",
+            tasks: [
+              "Manage default security policies and examine policy violations",
+              "Understand and enforce admission controller deploy-time policies",
+              "Enforce runtime security policies on secured clusters",
+              "Analyze traffic with the network graph and establish network baselines",
+              "Audit listening endpoints and manage Kubernetes NetworkPolicies from RHACS"
+            ]
+          },
+          {
+            name: "Compliance & Third-Party Integrations",
+            tasks: [
+              "Deploy Compliance Operator on secured clusters and execute tailored profiles (CIS, HIPAA, PCI)",
+              "Integrate external private image registries and configure OIDC authentication",
+              "Integrate object storage for Central backups using s3cmd and perform restore"
+            ]
+          }
+        ]
+      },
+      {
+        id: "EX432",
+        code: "EX432",
+        title: "Red Hat Certified Specialist in OpenShift Advanced Cluster Management exam",
+        level: "Nível 4 - Specialist",
+        levelCategory: "level-4",
+        rhcaRole: "elective",
+        courses: ["DO280", "DO380", "DO432"],
+        version: "OCP 4.18 / RHACM 2.13",
+        duration: "4.0 horas",
+        status: "active",
+        summary: "Gerenciamento em escala de múltiplos clusters: governança corporativa, automação de políticas, observabilidade centralizada e GitOps com ArgoCD.",
+        sections: [
+          {
+            name: "Deploy and Manage RHACM Fleet",
+            tasks: [
+              "Understand RHACM architecture (Hub, Spoke, Klusterlet)",
+              "Deploy RHACM using Operator Lifecycle Management (OLM)",
+              "Install RHACM agents in managed clusters and import/create/scale/remove clusters"
+            ]
+          },
+          {
+            name: "Access Control & Fleet Governance",
+            tasks: [
+              "Configure ClusterSets, ClusterSelectors, and PlacementRules",
+              "Create and manage role-based access control (RBAC) across the fleet",
+              "Deploy governance policies and integrate Compliance Operator for multi-cluster compliance"
+            ]
+          },
+          {
+            name: "Multi-Cluster Observability & GitOps Lifecycle",
+            tasks: [
+              "Enable, manage, and customize the RHACM Observability stack (Thanos)",
+              "Configure GitOps for application lifecycle management using Argo CD",
+              "Integrate Kustomize templates with Git repositories",
+              "Import managed clusters into Argo CD and troubleshoot application delivery"
+            ]
+          },
+          {
+            name: "Manage OpenShift Virtualization with RHACM",
+            tasks: [
+              "Deploy OpenShift Virtualization Operator across the fleet using GitOps and RHACM",
+              "Deploy and manage multi-cluster Virtual Machines and monitor virtualization health"
+            ]
+          }
+        ]
+      },
+      {
+        id: "EX229",
+        code: "EX229",
+        title: "Red Hat Certified Specialist in ROSA exam",
+        level: "Nível 4 - Specialist (Aposentado)",
+        levelCategory: "level-4",
+        rhcaRole: "elective",
+        courses: ["CS220", "CS221"],
+        version: "OCP 4.18 / AWS",
+        duration: "4.0 horas",
+        status: "retired",
+        summary: "Red Hat OpenShift Service on AWS (ROSA): integração nativa com STS, IAM Roles for Service Accounts (IRSA), EBS, EFS e AWS Controllers (ACK).",
+        sections: [
+          {
+            name: "Registries and AWS Storage Integration",
+            tasks: [
+              "Configure ROSA projects with Quay.io and Amazon Elastic Container Registry (ECR)",
+              "Configure StorageClasses for AWS Elastic Block Storage (EBS)",
+              "Configure ROSA to consume Elastic File System (EFS) shares"
+            ]
+          },
+          {
+            name: "IAM IRSA & AWS Controllers for Kubernetes (ACK)",
+            tasks: [
+              "Configure pod identity using STS / IAM Roles for Service Accounts (IRSA)",
+              "Grant pods direct access to Amazon S3, Aurora DB, and SQS without static keys",
+              "Provision native AWS infrastructure using AWS Controllers for Kubernetes (ACK)"
+            ]
+          },
+          {
+            name: "AWS Observability & Autoscaling",
+            tasks: [
+              "Configure structured application logging and query logs in Amazon CloudWatch",
+              "Configure user workload monitoring with Amazon Managed Prometheus Service (AMP)",
+              "Create node pools, configure pod autoscaling (HPA) and cluster node autoscaling"
+            ]
+          }
+        ]
+      },
+      {
+        id: "EX480",
+        code: "EX480",
+        title: "Red Hat Certified Specialist in MultiCluster Management exam",
+        level: "Nível 4 - Specialist (Aposentado)",
+        levelCategory: "level-4",
+        rhcaRole: "elective",
+        courses: ["DO480"],
+        version: "Platform Plus (ACM + ACS + Quay)",
+        duration: "4.0 horas",
+        status: "retired",
+        summary: "Gestão completa do OpenShift Platform Plus: combinação unificada de RHACM, RHACS e Red Hat Quay em cenários corporativos.",
+        sections: [
+          {
+            name: "Fleet Administration & MultiCluster Policies",
+            tasks: [
+              "Deploy and operate RHACM, import clusters and configure ClusterSets",
+              "Manage RBAC and multi-cluster governance policies with Compliance Operator",
+              "Enable and tune the RHACM central observability service"
+            ]
+          },
+          {
+            name: "Deploy and Configure Red Hat Quay",
+            tasks: [
+              "Understand Red Hat Quay architecture and tenancy models",
+              "Configure the Quay Operator and manage image storage backends",
+              "Manipulate container images using Podman and Skopeo"
+            ]
+          },
+          {
+            name: "RHACS Security & MultiCluster CI/CD",
+            tasks: [
+              "Install and configure RHACS across multiple clusters",
+              "Import managed clusters into RHACS and detect vulnerabilities in multi-cluster pipelines",
+              "Integrate RHACM with OpenShift Pipelines (Tekton) and OpenShift GitOps (Argo CD)"
+            ]
+          }
+        ]
+      }
+    ];
+
+    // Local storage key for study tracking
+    const STORAGE_KEY = 'redhat_openshift_study_tracker_v1';
+    let userState = {
+      completedTasks: {}, // { "EX280_0_1": true }
+      rhcaPassedExams: {} // { "EX280": true, "EX380": true }
+    };
+
+    // Load persisted state
+    function loadSavedState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          userState = JSON.parse(saved);
+          if (!userState.completedTasks) userState.completedTasks = {};
+          if (!userState.rhcaPassedExams) userState.rhcaPassedExams = {};
+        }
+      } catch (e) {
+        console.warn("Could not load local storage", e);
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(userState));
+      } catch (e) {
+        console.warn("Could not save to local storage", e);
+      }
+      updateGlobalRhcaTracker();
+    }
+
+    function renderExamsList(filteredExams) {
+      const container = document.getElementById('exams-container');
+      const noResults = document.getElementById('no-results');
+
+      if (!filteredExams || filteredExams.length === 0) {
+        container.innerHTML = '';
+        noResults.classList.remove('hidden');
+        return;
+      }
+      noResults.classList.add('hidden');
+
+      container.innerHTML = filteredExams.map(exam => {
+        // Calculate progress
+        let totalExamTasks = 0;
+        let doneExamTasks = 0;
+
+        exam.sections.forEach((sec, sIdx) => {
+          sec.tasks.forEach((_, tIdx) => {
+            totalExamTasks++;
+            const taskId = `${exam.id}_${sIdx}_${tIdx}`;
+            if (userState.completedTasks[taskId]) {
+              doneExamTasks++;
+            }
+          });
+        });
+
+        const pct = totalExamTasks > 0 ? Math.round((doneExamTasks / totalExamTasks) * 100) : 0;
+        const isPassed = !!userState.rhcaPassedExams[exam.id];
+
+        // Badges
+        const isMandatory = exam.rhcaRole === 'mandatory';
+        const isRetired = exam.status === 'retired';
+
+        return `
+          <div class="bg-white rounded-2xl border ${isPassed ? 'border-emerald-400 ring-2 ring-emerald-400/20' : 'border-slate-200'} p-5 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between group">
+            <div>
+              <!-- Top tags -->
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <span class="px-2.5 py-0.5 rounded-md text-xs font-bold ${isMandatory ? 'bg-redhat text-white' : 'bg-slate-800 text-slate-100'}">
+                    ${exam.code}
+                  </span>
+                  ${isMandatory ? `
+                    <span class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-red-50 text-red-700 border border-red-200 flex items-center gap-1">
+                      <span class="w-1.5 h-1.5 rounded-full bg-redhat"></span> Obrigatório RHCA
+                    </span>
+                  ` : `
+                    <span class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-amber-50 text-amber-800 border border-amber-200">
+                      Eletiva RHCA
+                    </span>
+                  `}
+                  ${isRetired ? `
+                    <span class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 text-slate-600 border border-slate-300">
+                      Aposentado
+                    </span>
+                  ` : ''}
+                </div>
+
+                <!-- Passed Switch button -->
+                <button onclick="toggleExamPassed('${exam.id}', event)" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium transition ${isPassed ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
+                  <svg class="w-3.5 h-3.5 ${isPassed ? 'text-emerald-600' : 'text-slate-400'}" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                  <span>${isPassed ? 'Aprovado' : 'Marcar Aprovado'}</span>
+                </button>
+              </div>
+
+              <!-- Title -->
+              <h3 class="text-base font-bold text-slate-900 group-hover:text-redhat transition leading-snug">
+                ${exam.title}
+              </h3>
+
+              <p class="text-xs text-slate-500 mt-1 line-clamp-2">
+                ${exam.summary}
+              </p>
+
+              <!-- Meta info: Courses, Version & Level -->
+              <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center gap-y-2 gap-x-4 text-xs text-slate-600">
+                <div>
+                  <span class="text-slate-400">Nível:</span>
+                  <span class="font-medium text-slate-700 ml-0.5">${exam.level}</span>
+                </div>
+                <div>
+                  <span class="text-slate-400">Cursos:</span>
+                  <span class="font-semibold text-slate-800 ml-0.5">${exam.courses.join(' / ')}</span>
+                </div>
+                <div>
+                  <span class="text-slate-400">Duração:</span>
+                  <span class="font-medium text-slate-700 ml-0.5">${exam.duration}</span>
+                </div>
+              </div>
+
+              <!-- Top Objectives Preview -->
+              <div class="mt-3.5 space-y-1.5">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">
+                  Principais Tópicos (${exam.sections.length} seções / ${totalExamTasks} tarefas):
+                </span>
+                <ul class="text-xs text-slate-600 space-y-1">
+                  ${exam.sections.slice(0, 3).map(sec => `
+                    <li class="flex items-start gap-1.5">
+                      <span class="text-redhat font-bold text-sm leading-none">•</span>
+                      <span class="truncate">${sec.name}</span>
+                    </li>
+                  `).join('')}
+                  ${exam.sections.length > 3 ? `<li class="text-[11px] text-slate-400 italic pl-3">+ ${exam.sections.length - 3} outros domínios de conhecimento...</li>` : ''}
+                </ul>
+              </div>
+            </div>
+
+            <!-- Footer: Progress & Action Button -->
+            <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between gap-3">
+              <div class="flex-1 max-w-[140px]">
+                <div class="flex justify-between text-[11px] mb-1">
+                  <span class="text-slate-500">Estudo</span>
+                  <span class="font-bold text-slate-700">${pct}%</span>
+                </div>
+                <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                  <div class="bg-redhat h-1.5 rounded-full" style="width: ${pct}%"></div>
+                </div>
+              </div>
+
+              <button onclick="openDetailModal('${exam.id}')" class="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-lg bg-slate-900 text-white hover:bg-slate-800 text-xs font-semibold transition shadow-sm">
+                <span>Ver Objetivos</span>
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function applyFilters() {
+      const searchVal = document.getElementById('search-input').value.toLowerCase().trim();
+      const levelVal = document.getElementById('filter-level').value;
+      const statusVal = document.getElementById('filter-status').value;
+      const rhcaVal = document.getElementById('filter-rhca-role').value;
+
+      const filtered = EXAMS_DATA.filter(exam => {
+        // Level filter
+        if (levelVal !== 'all' && exam.levelCategory !== levelVal) return false;
+
+        // Status filter
+        if (statusVal !== 'all' && exam.status !== statusVal) return false;
+
+        // RHCA Role filter
+        if (rhcaVal !== 'all' && exam.rhcaRole !== rhcaVal) return false;
+
+        // Search text matching (code, title, summary, courses, section names, or tasks)
+        if (searchVal) {
+          const matchCode = exam.code.toLowerCase().includes(searchVal);
+          const matchTitle = exam.title.toLowerCase().includes(searchVal);
+          const matchCourses = exam.courses.some(c => c.toLowerCase().includes(searchVal));
+          const matchSummary = exam.summary.toLowerCase().includes(searchVal);
+          const matchSections = exam.sections.some(s => {
+            return s.name.toLowerCase().includes(searchVal) || 
+                   s.tasks.some(t => t.toLowerCase().includes(searchVal));
+          });
+
+          return matchCode || matchTitle || matchCourses || matchSummary || matchSections;
+        }
+
+        return true;
+      });
+
+      renderExamsList(filtered);
+    }
+
+    function setSearchFilter(term) {
+      document.getElementById('search-input').value = term;
+      applyFilters();
+    }
+
+    function resetFilters() {
+      document.getElementById('search-input').value = '';
+      document.getElementById('filter-level').value = 'all';
+      document.getElementById('filter-status').value = 'all';
+      document.getElementById('filter-rhca-role').value = 'all';
+      applyFilters();
+    }
+
+    let currentModalExamId = null;
+
+    function openDetailModal(examId) {
+      const exam = EXAMS_DATA.find(e => e.id === examId);
+      if (!exam) return;
+      currentModalExamId = examId;
+
+      document.getElementById('modal-title').textContent = `${exam.code}: ${exam.title}`;
+      document.getElementById('modal-subtitle').textContent = `${exam.level} • Cursos de apoio: ${exam.courses.join(', ')} • Base: ${exam.version}`;
+
+      const badgesEl = document.getElementById('modal-badges');
+      badgesEl.innerHTML = `
+        <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-slate-900 text-white">${exam.code}</span>
+        ${exam.rhcaRole === 'mandatory' ? 
+          `<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-red-100 text-red-700">Obrigatório RHCA</span>` : 
+          `<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-800">Especialista (Eletiva)</span>`
+        }
+        ${exam.status === 'retired' ? `<span class="px-2 py-0.5 rounded text-[11px] font-bold bg-slate-200 text-slate-700">Aposentado</span>` : ''}
+      `;
+
+      renderModalTasks(exam);
+      document.getElementById('detail-modal').classList.remove('hidden');
+    }
+
+    function renderModalTasks(exam) {
+      const container = document.getElementById('modal-tasks-container');
+      let totalTasks = 0;
+      let completedTasks = 0;
+
+      container.innerHTML = exam.sections.map((section, sIdx) => {
+        return `
+          <div class="border border-slate-200 rounded-xl p-3.5 bg-white">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-800 mb-2.5 flex items-center justify-between">
+              <span>${sIdx + 1}. ${section.name}</span>
+              <span class="text-[11px] text-slate-400 font-normal">${section.tasks.length} itens</span>
+            </h4>
+            <div class="space-y-1.5">
+              ${section.tasks.map((task, tIdx) => {
+                totalTasks++;
+                const taskId = `${exam.id}_${sIdx}_${tIdx}`;
+                const isChecked = !!userState.completedTasks[taskId];
+                if (isChecked) completedTasks++;
+
+                return `
+                  <label class="flex items-start gap-2.5 p-1.5 rounded-lg hover:bg-slate-50 cursor-pointer transition text-xs text-slate-700">
+                    <input type="checkbox" onchange="toggleTaskChecked('${taskId}')" ${isChecked ? 'checked' : ''} 
+                      class="mt-0.5 w-4 h-4 rounded text-redhat focus:ring-redhat border-slate-300">
+                    <span class="${isChecked ? 'line-through text-slate-400' : 'text-slate-700'} leading-relaxed">${task}</span>
+                  </label>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      const pct = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+      document.getElementById('modal-progress-summary').innerHTML = `
+        Progresso de estudos: <strong class="text-slate-800">${completedTasks}</strong> de <strong class="text-slate-800">${totalTasks}</strong> tarefas dominadas (${pct}%)
+      `;
+    }
+
+    function toggleTaskChecked(taskId) {
+      if (userState.completedTasks[taskId]) {
+        delete userState.completedTasks[taskId];
+      } else {
+        userState.completedTasks[taskId] = true;
+      }
+      saveState();
+
+      // re-render active modal
+      if (currentModalExamId) {
+        const exam = EXAMS_DATA.find(e => e.id === currentModalExamId);
+        if (exam) renderModalTasks(exam);
+      }
+      // re-render main list progress bars
+      applyFilters();
+    }
+
+    function closeDetailModal() {
+      document.getElementById('detail-modal').classList.add('hidden');
+      currentModalExamId = null;
+    }
+
+    function copyObjectivesText() {
+      if (!currentModalExamId) return;
+      const exam = EXAMS_DATA.find(e => e.id === currentModalExamId);
+      if (!exam) return;
+
+      let text = `=== ${exam.code} - ${exam.title} ===\n`;
+      text += `Nível: ${exam.level} | Cursos: ${exam.courses.join(', ')}\n\n`;
+
+      exam.sections.forEach((sec, idx) => {
+        text += `${idx + 1}. ${sec.name}\n`;
+        sec.tasks.forEach(t => {
+          text += `  - ${t}\n`;
+        });
+        text += '\n';
+      });
+
+      // Use textarea copy fallback for reliable cross-browser execution
+      const dummy = document.createElement("textarea");
+      document.body.appendChild(dummy);
+      dummy.value = text;
+      dummy.select();
+      document.execCommand("copy");
+      document.body.removeChild(dummy);
+
+      const label = document.getElementById('btn-copy-label');
+      label.textContent = "Copiado!";
+      showToast("Ementa copiada para a área de transferência!");
+      setTimeout(() => { label.textContent = "Copiar Ementa"; }, 2000);
+    }
+
+    function toggleExamPassed(examId, event) {
+      if (event) event.stopPropagation();
+      userState.rhcaPassedExams[examId] = !userState.rhcaPassedExams[examId];
+      saveState();
+      applyFilters();
+      showToast(`Status do exame ${examId} atualizado!`);
+    }
+
+    function openArchitectModal() {
+      renderArchitectModalContent();
+      document.getElementById('architect-modal').classList.remove('hidden');
+    }
+
+    function closeArchitectModal() {
+      document.getElementById('architect-modal').classList.add('hidden');
+    }
+
+    function renderArchitectModalContent() {
+      const mandList = document.getElementById('sim-mandatory-list');
+      const elecList = document.getElementById('sim-elective-list');
+
+      const mandExams = EXAMS_DATA.filter(e => e.rhcaRole === 'mandatory');
+      const elecExams = EXAMS_DATA.filter(e => e.rhcaRole === 'elective');
+
+      mandList.innerHTML = mandExams.map(exam => {
+        const isChecked = !!userState.rhcaPassedExams[exam.id];
+        return `
+          <label class="flex items-center justify-between p-2.5 rounded-xl border ${isChecked ? 'bg-emerald-50 border-emerald-300' : 'bg-white border-slate-200'} cursor-pointer transition">
+            <div class="flex items-center gap-2.5">
+              <input type="checkbox" onchange="toggleExamPassed('${exam.id}'); renderArchitectModalContent();" ${isChecked ? 'checked' : ''} class="w-4 h-4 text-emerald-600 rounded border-slate-300">
+              <div>
+                <span class="font-bold text-slate-900">${exam.code}</span>
+                <span class="text-xs text-slate-500 ml-1.5">${exam.title}</span>
+              </div>
+            </div>
+            <span class="text-[11px] font-semibold ${isChecked ? 'text-emerald-700' : 'text-slate-400'}">${isChecked ? 'Concluído' : 'Pendente'}</span>
+          </label>
+        `;
+      }).join('');
+
+      let selectedElectives = 0;
+      elecList.innerHTML = elecExams.map(exam => {
+        const isChecked = !!userState.rhcaPassedExams[exam.id];
+        if (isChecked) selectedElectives++;
+
+        return `
+          <label class="flex items-center justify-between p-2 rounded-lg border ${isChecked ? 'bg-amber-50 border-amber-300' : 'bg-white border-slate-200'} cursor-pointer transition text-xs">
+            <div class="flex items-center gap-2.5">
+              <input type="checkbox" onchange="toggleExamPassed('${exam.id}'); renderArchitectModalContent();" ${isChecked ? 'checked' : ''} class="w-4 h-4 text-amber-600 rounded border-slate-300">
+              <div>
+                <span class="font-bold text-slate-800">${exam.code}</span>
+                <span class="text-slate-500 ml-1.5">${exam.title}</span>
+                ${exam.status === 'retired' ? '<span class="text-[10px] text-slate-400 italic">(Aposentado mas válido se vigente)</span>' : ''}
+              </div>
+            </div>
+            <span class="font-semibold ${isChecked ? 'text-amber-800' : 'text-slate-400'}">${isChecked ? 'Selecionado' : 'Disponível'}</span>
+          </label>
+        `;
+      }).join('');
+
+      document.getElementById('sim-specialist-count').textContent = `${selectedElectives} selecionados (mínimo 3)`;
+
+      // Result Verdict Box calculation
+      const mandPassedCount = mandExams.filter(e => userState.rhcaPassedExams[e.id]).length;
+      const isMandatoryComplete = mandPassedCount === mandExams.length;
+      const isElectiveComplete = selectedElectives >= 3;
+      const isRhcaEarned = isMandatoryComplete && isElectiveComplete;
+
+      const resBox = document.getElementById('sim-result-box');
+      if (isRhcaEarned) {
+        resBox.className = "p-4 rounded-xl border border-emerald-300 bg-emerald-50 text-emerald-900";
+        resBox.innerHTML = `
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-full bg-emerald-200 text-emerald-800 flex items-center justify-center font-bold text-lg">✓</div>
+            <div>
+              <h5 class="font-bold text-sm text-emerald-900">Parabéns! Requisitos do RHCA em OpenShift Atingidos!</h5>
+              <p class="text-xs text-emerald-700 mt-0.5">Você selecionou os 2 exames obrigatórios e pelo menos 3 exames de Especialista válidos.</p>
+            </div>
+          </div>
+        `;
+      } else {
+        resBox.className = "p-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-700";
+        resBox.innerHTML = `
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-sm">ℹ</div>
+            <div>
+              <h5 class="font-bold text-sm text-slate-800">Status da Trilha para Arquiteto</h5>
+              <p class="text-xs text-slate-600 mt-0.5">
+                Faltam: 
+                ${!isMandatoryComplete ? `<strong>${2 - mandPassedCount} exame(s) obrigatório(s)</strong>` : ''}
+                ${!isMandatoryComplete && !isElectiveComplete ? ' e ' : ''}
+                ${!isElectiveComplete ? `<strong>${3 - selectedElectives} exame(s) especialista(s)</strong>` : ''} 
+                para validar o grau de RHCA.
+              </p>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function updateGlobalRhcaTracker() {
+      const mandPassed = (userState.rhcaPassedExams['EX280'] ? 1 : 0) + (userState.rhcaPassedExams['EX380'] ? 1 : 0);
+      const specialistPassed = Object.keys(userState.rhcaPassedExams).filter(id => {
+        return userState.rhcaPassedExams[id] && id !== 'EX280' && id !== 'EX380';
+      }).length;
+
+      document.getElementById('stat-mandatory').textContent = `${mandPassed} / 2 Aprovados`;
+      document.getElementById('stat-specialists').textContent = `${Math.min(specialistPassed, 3)} / 3 Selecionados (${specialistPassed} total)`;
+
+      const totalProgressUnits = mandPassed + Math.min(specialistPassed, 3);
+      const pct = Math.round((totalProgressUnits / 5) * 100);
+
+      document.getElementById('rhca-progress-bar').style.width = `${pct}%`;
+      document.getElementById('rhca-badge-pct').textContent = `${pct}%`;
+      document.getElementById('header-rhca-status').textContent = `Simulador RHCA (${totalProgressUnits}/5)`;
+    }
+
+    // Reset everything
+    function resetAllProgress() {
+      if (window.confirm("Deseja resetar todas as marcações de estudo e exames aprovados?")) {
+        userState = { completedTasks: {}, rhcaPassedExams: {} };
+        saveState();
+        applyFilters();
+        showToast("Progresso zerado com sucesso.");
+      }
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-message').textContent = message;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3000);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSavedState();
+      applyFilters();
+      updateGlobalRhcaTracker();
+    });
+  </script>
+</body>
+</html>
